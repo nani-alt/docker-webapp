@@ -44,5 +44,16 @@ pipeline {
                 }
             }
         }
+		stage('Deploy') {
+    steps {
+        sh '''
+            docker pull nanii12345/my-webapp:jenkins
+            docker rm -f my-webapp-prod || true
+            docker run -d --name my-webapp-prod -p 8085:80 nanii12345/my-webapp:jenkins
+            sleep 3
+            curl -f http://localhost:8085
+        '''
+    }
+}
     }
 }
