@@ -15,14 +15,16 @@ pipeline {
             }
         }
 	stage('Docker Test') {
-   		 steps {
-       			 sh 'docker run -d --name jenkins-test -p 8084:80 my-webapp:jenkins'
-      		 	 sh 'sleep 3'
-       			 sh 'curl -f http://localhost:8084'
-       			 sh 'docker stop jenkins-test'
-       			 sh 'docker rm jenkins-test'
-   		 }
-	}
+    steps {
+        sh '''
+            docker rm -f jenkins-test || true
+            docker run -d --name jenkins-test -p 8084:80 my-webapp:jenkins
+            sleep 3
+            curl -f http://localhost:8084
+            docker rm -f jenkins-test
+        '''
+    }
+}
 	stage('Docker Push') {
     steps {
         withCredentials([usernamePassword(
