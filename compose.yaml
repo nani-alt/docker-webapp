@@ -1,0 +1,6 @@
+services:
+    web:
+      image: my-webapp:v1
+      ports:
+        - "8083:80"
+
